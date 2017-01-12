@@ -17,6 +17,9 @@ class RKAURecoderandPlayer {
         }
     }
     
+    //Two Method Swith
+    private let method = 0      //0 on callback  1 tow callback
+    
     //audio unit
     private var audioUnit:AudioComponentInstance?
     
@@ -31,28 +34,35 @@ class RKAURecoderandPlayer {
         (inRefCon, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData) -> OSStatus in
         //get self
         let rkau:RKAURecoderandPlayer = Unmanaged<RKAURecoderandPlayer>.fromOpaque(inRefCon).takeUnretainedValue()
-        
-        //alloc buffer
-        var buf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
-        var buffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf)
-        //create buffer list
-        var bufferList = AudioBufferList(mNumberBuffers: 1, mBuffers: buffer)
-        
-        //get microphone data
         var status = noErr;
-        status = AudioUnitRender(rkau.audioUnit!, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, &bufferList)
         
-        //alloc temp buffer
-        var tempBuf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
-        var tempBuffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf)
-        
-        //copy microphone data to temp buffer
-        tempBuffer.mNumberChannels = bufferList.mBuffers.mNumberChannels
-        tempBuffer.mDataByteSize = bufferList.mBuffers.mDataByteSize
-        memcpy(tempBuffer.mData, bufferList.mBuffers.mData, Int(bufferList.mBuffers.mDataByteSize))
-        
-        //add temp buffer to pcm buffer list
-        rkau.audioBuffers.append(tempBuffer)
+        if(rkau.method == 0)
+        {
+            status = AudioUnitRender(rkau.audioUnit!, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData!);
+        }
+        else{
+            //alloc buffer
+            var buf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
+            var buffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf)
+            //create buffer list
+            var bufferList = AudioBufferList(mNumberBuffers: 1, mBuffers: buffer)
+            
+            //get microphone data
+            
+            status = AudioUnitRender(rkau.audioUnit!, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, &bufferList)
+            
+            //alloc temp buffer
+            var tempBuf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
+            var tempBuffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf)
+            
+            //copy microphone data to temp buffer
+            tempBuffer.mNumberChannels = bufferList.mBuffers.mNumberChannels
+            tempBuffer.mDataByteSize = bufferList.mBuffers.mDataByteSize
+            memcpy(tempBuffer.mData, bufferList.mBuffers.mData, Int(bufferList.mBuffers.mDataByteSize))
+            
+            //add temp buffer to pcm buffer list
+            rkau.audioBuffers.append(tempBuffer)
+        }
         
         return status
     }
@@ -145,11 +155,18 @@ class RKAURecoderandPlayer {
         
         
         var callbackStruct = AURenderCallbackStruct(inputProc: recordingCallback, inputProcRefCon: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()))
-        status |= AudioUnitSetProperty(audioUnit!, kAudioOutputUnitProperty_SetInputCallback, kAudioUnitScope_Global, kInputBus, &callbackStruct, UInt32(MemoryLayout<AURenderCallbackStruct>.size))
         
+        if method == 1{
+            status |= AudioUnitSetProperty(audioUnit!, kAudioOutputUnitProperty_SetInputCallback, kAudioUnitScope_Global, kInputBus, &callbackStruct, UInt32(MemoryLayout<AURenderCallbackStruct>.size))
+        }
+        else{
+            status |= AudioUnitSetProperty(audioUnit!, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, kOutputBus, &callbackStruct, UInt32(MemoryLayout<AURenderCallbackStruct>.size))
+        }
+        if method == 1{
+            callbackStruct = AURenderCallbackStruct(inputProc: playbackCallback, inputProcRefCon: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()))
+            status |= AudioUnitSetProperty(audioUnit!, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Global, kOutputBus, &callbackStruct, UInt32(MemoryLayout<AURenderCallbackStruct>.size))
+        }
         
-        callbackStruct = AURenderCallbackStruct(inputProc: playbackCallback, inputProcRefCon: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()))
-        status |= AudioUnitSetProperty(audioUnit!, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Global, kOutputBus, &callbackStruct, UInt32(MemoryLayout<AURenderCallbackStruct>.size))
         
         flag = 0
         status |= AudioUnitSetProperty(audioUnit!, kAudioUnitProperty_ShouldAllocateBuffer, kAudioUnitScope_Output, kInputBus, &flag, UInt32(MemoryLayout<UInt32>.size))
