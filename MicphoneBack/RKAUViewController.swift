@@ -21,7 +21,27 @@ class RKAUViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    let rkAU = RKAURecoderandPlayer()
+    var bConfigured = false
 
+    @IBAction func onStartorStop(_ sender: Any) {
+        if !bConfigured
+        {
+            bConfigured = rkAU.configRecorder()
+        }
+        
+        let btn = sender as! UIButton
+        if btn.isSelected{
+            rkAU.stop()
+            btn.isSelected = false
+        }
+        else{
+            rkAU.start()
+            btn.isSelected = true
+        }
+        
+        
+    }
     
     /*
     // MARK: - Navigation

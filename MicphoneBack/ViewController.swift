@@ -13,6 +13,20 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        //Test C library pointer conversion
+//        struct Context {
+//            var city = "Tokyo"
+//        }
+//        
+//        var context: Context = Context()
+//        let rawPtr = UnsafeMutableRawPointer(&context)
+//        let opaquePtr = OpaquePointer(rawPtr)
+//        let contextPtr = UnsafeMutablePointer<Context>(opaquePtr)
+//        
+//        context.city // "Tokyo"
+//        contextPtr.pointee.city = "New York"
+//        context.city // "New York"
     }
 
     override func didReceiveMemoryWarning() {
@@ -20,12 +34,8 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    let object = RKAURecoderandPlayer()
-    
     @IBAction func onTest(_ sender: Any) {
-        
-        object.configRecorder()
-        object.start()
+
     }
 
 }

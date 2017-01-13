@@ -18,7 +18,7 @@ class RKAURecoderandPlayer {
     }
     
     //Two Method Swith
-    private let method = 0      //0 on callback  1 tow callback
+    private let method = 1      //0 on callback  1 tow callback
     
     //audio unit
     private var audioUnit:AudioComponentInstance?
@@ -28,7 +28,7 @@ class RKAURecoderandPlayer {
     private let kInputBus = AudioUnitElement(1)
     
     //pcm bufer list
-    private var audioBuffers = [AudioBuffer]()
+    private var audioBuffers = [(AudioBuffer, Int)]()
     
     private let recordingCallback:AURenderCallback = {
         (inRefCon, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, ioData) -> OSStatus in
@@ -43,25 +43,49 @@ class RKAURecoderandPlayer {
         else{
             //alloc buffer
             var buf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
+            //init value to 0
+            let bindptr = buf.bindMemory(to: Int8.self, capacity: Int(inNumberFrames * 2))
+            bindptr.initialize(to: 0)
             var buffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf)
+//            memset(buffer.mData, 0, Int(buffer.mDataByteSize))
+            
+//            //alloc buffer
+//            var buf1 = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
+//            //init value to 0
+//            let bindptr1 = buf1.bindMemory(to: Int8.self, capacity: Int(inNumberFrames * 2))
+//            bindptr1.initialize(to: 0)
+//            var buffer1 = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf1)
+            
             //create buffer list
             var bufferList = AudioBufferList(mNumberBuffers: 1, mBuffers: buffer)
             
             //get microphone data
-            
             status = AudioUnitRender(rkau.audioUnit!, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, &bufferList)
             
-            //alloc temp buffer
-            var tempBuf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
-            var tempBuffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: buf)
+            //-1
+            //add buffer to buffer list
+            rkau.audioBuffers.append((buffer,Int(inNumberFrames * 2)))
             
-            //copy microphone data to temp buffer
-            tempBuffer.mNumberChannels = bufferList.mBuffers.mNumberChannels
-            tempBuffer.mDataByteSize = bufferList.mBuffers.mDataByteSize
-            memcpy(tempBuffer.mData, bufferList.mBuffers.mData, Int(bufferList.mBuffers.mDataByteSize))
-            
-            //add temp buffer to pcm buffer list
-            rkau.audioBuffers.append(tempBuffer)
+            //-2
+//            //copy buffer to temp buffer
+//            //alloc temp buffer
+//            var tempBuf = UnsafeMutableRawPointer.allocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
+//            //init value to 0
+//            let bindptr2 = buf.bindMemory(to: Int8.self, capacity: Int(inNumberFrames * 2))
+//            bindptr2.initialize(to: 0)
+//            
+//            //create audio buffer
+//            var tempBuffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: inNumberFrames * 2, mData: tempBuf)
+//
+//            //copy microphone data to temp buffer
+//            tempBuffer.mNumberChannels = bufferList.mBuffers.mNumberChannels
+//            tempBuffer.mDataByteSize = bufferList.mBuffers.mDataByteSize
+//            memcpy(tempBuffer.mData, bufferList.mBuffers.mData, Int(bufferList.mBuffers.mDataByteSize))
+//            
+//            //add temp buffer to pcm buffer list
+//            rkau.audioBuffers.append((tempBuffer,Int(inNumberFrames * 2)))
+//            
+//            buf.deallocate(bytes: Int(inNumberFrames * 2), alignedTo: MemoryLayout<Int8>.alignment)
         }
         
         return status
@@ -97,26 +121,27 @@ class RKAURecoderandPlayer {
         
         var bufferCount = ioData!.pointee.mNumberBuffers
         if bufferCount != 1{
-            
+            //get Audio Buffer List from ioData
+            let abl = UnsafeMutableAudioBufferListPointer(ioData)
+            for buffer in abl!{
+                //to do...
+            }
         }
         else{
             if rkau.audioBuffers.count > 0{
                 var tempBuffer = rkau.audioBuffers[0]
-                memcpy(ioData!.pointee.mBuffers.mData, tempBuffer.mData, Int(tempBuffer.mDataByteSize))
+                memcpy(ioData!.pointee.mBuffers.mData, tempBuffer.0.mData, Int(tempBuffer.0.mDataByteSize))
                 ioData!.pointee.mNumberBuffers = 1
+                
+                tempBuffer.0.mData?.deallocate(bytes:tempBuffer.1, alignedTo: MemoryLayout<Int8>.alignment)
                 
                 rkau.audioBuffers.removeFirst()
             }
             else{
-                
+                // copy slient data to ioData
             }
             
         }
-        
-        //        for i in 0..<bufferCount{
-        //            var buffer = ioData?.pointee.mBuffers
-        //
-        //        }
         
         return noErr
     }
