@@ -18,7 +18,7 @@ class RKAURecoderandPlayer {
     }
     
     //Two Method Swith
-    private let method = 0      //0 on callback  1 tow callback
+    private let method = 1      //0 on callback  1 tow callback
     
     //audio unit
     private var audioUnit:AudioComponentInstance?
@@ -152,6 +152,10 @@ class RKAURecoderandPlayer {
         status |= AudioUnitSetProperty(audioUnit!, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, kInputBus, &audioFormat, UInt32(MemoryLayout<AudioStreamBasicDescription>.size))
         
         status |= AudioUnitSetProperty(audioUnit!, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, kOutputBus, &audioFormat, UInt32(MemoryLayout<AudioStreamBasicDescription>.size))
+        
+        //enable echo cancellation (default is 0, don't need to set, just for test)
+        flag = 0
+        status |= AudioUnitSetProperty(audioUnit!, kAUVoiceIOProperty_BypassVoiceProcessing, kAudioUnitScope_Global, kOutputBus, &flag, UInt32(MemoryLayout<UInt32>.size))
         
         
         var callbackStruct = AURenderCallbackStruct(inputProc: recordingCallback, inputProcRefCon: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque()))
