@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="kqL-g2-jye">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="kqL-g2-jye">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,6 +31,7 @@
                                 <state key="selected" title="StopRecord"/>
                                 <connections>
                                     <action selector="onTest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bkl-4V-7uf"/>
+                                    <segue destination="ZBW-oG-rPV" kind="show" id="Qws-h6-bAs"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ugT-XU-Ygb">
@@ -57,7 +58,7 @@
             </objects>
             <point key="canvasLocation" x="618" y="77"/>
         </scene>
-        <!--View Controller-->
+        <!--Audio Unit-->
         <scene sceneID="dyu-kQ-BbY">
             <objects>
                 <viewController id="ZBW-oG-rPV" customClass="RKAUViewController" customModule="MicphoneBack" customModuleProvider="target" sceneMemberID="viewController">
@@ -69,18 +70,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywY-ru-Jym">
-                                <rect key="frame" x="106" y="153" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywY-ru-Jym">
+                                <rect key="frame" x="139" y="213" width="96" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Sq3-cb-8EC"/>
+                                </constraints>
+                                <state key="normal" title="Start"/>
+                                <state key="selected" title="Stop"/>
+                                <connections>
+                                    <action selector="onStartorStop:" destination="ZBW-oG-rPV" eventType="touchUpInside" id="w3g-zZ-67c"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ywY-ru-Jym" firstAttribute="leading" secondItem="0Kr-Lo-aFp" secondAttribute="leadingMargin" constant="123" id="1pT-WE-iKM"/>
+                            <constraint firstItem="ywY-ru-Jym" firstAttribute="top" secondItem="Kf3-OM-f1h" secondAttribute="bottom" constant="149" id="bPz-9d-VHG"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ywY-ru-Jym" secondAttribute="trailing" constant="124" id="deC-mZ-6aX"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Audio Unit" id="KzQ-Cu-QIY"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EEB-td-8al" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1262" y="77"/>
+            <point key="canvasLocation" x="1261.5999999999999" y="76.911544227886068"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="c8G-Oq-oU8">
