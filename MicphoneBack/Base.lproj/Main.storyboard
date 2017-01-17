@@ -59,7 +59,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="618" y="77"/>
+            <point key="canvasLocation" x="-130" y="-43"/>
         </scene>
         <!--Handset-->
         <scene sceneID="ops-lI-Yjo">
@@ -79,6 +79,10 @@
                                     <constraint firstAttribute="height" constant="30" id="dxq-xM-r6C"/>
                                 </constraints>
                                 <state key="normal" title="Play"/>
+                                <state key="selected" title="Stop"/>
+                                <connections>
+                                    <action selector="onPlayandStop:" destination="ero-lh-6c1" eventType="touchUpInside" id="wLF-cZ-ePT"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -129,7 +133,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EEB-td-8al" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1261.5999999999999" y="76.911544227886068"/>
+            <point key="canvasLocation" x="1238" y="69"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="c8G-Oq-oU8">
