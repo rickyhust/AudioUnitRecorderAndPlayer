@@ -202,7 +202,7 @@
 				TargetAttributes = {
 					9C1574901E2655BE0052AB15 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = Y54SUM6PA4;
+						DevelopmentTeam = JVSND8PU68;
 						ProvisioningStyle = Automatic;
 					};
 					9C1574A41E2655BE0052AB15 = {
@@ -425,11 +425,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = Y54SUM6PA4;
+				DEVELOPMENT_TEAM = JVSND8PU68;
 				INFOPLIST_FILE = MicphoneBack/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.happyteam.dubbingshow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vdousoft.funnydubbing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -439,11 +439,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = Y54SUM6PA4;
+				DEVELOPMENT_TEAM = JVSND8PU68;
 				INFOPLIST_FILE = MicphoneBack/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.happyteam.dubbingshow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vdousoft.funnydubbing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
